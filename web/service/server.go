@@ -5,12 +5,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/shirou/gopsutil/cpu"
-	"github.com/shirou/gopsutil/disk"
-	"github.com/shirou/gopsutil/host"
-	"github.com/shirou/gopsutil/load"
-	"github.com/shirou/gopsutil/mem"
-	"github.com/shirou/gopsutil/net"
 	"io"
 	"io/fs"
 	"net/http"
@@ -18,8 +12,14 @@ import (
 	"runtime"
 	"time"
 	"x-ui/logger"
-	"x-ui/util/sys"
 	"x-ui/xray"
+
+	"github.com/shirou/gopsutil/cpu"
+	"github.com/shirou/gopsutil/disk"
+	"github.com/shirou/gopsutil/host"
+	"github.com/shirou/gopsutil/load"
+	"github.com/shirou/gopsutil/mem"
+	"github.com/shirou/gopsutil/net"
 )
 
 type ProcessState string
@@ -141,16 +141,6 @@ func (s *ServerService) GetStatus(lastStatus *Status) *Status {
 		}
 	} else {
 		logger.Warning("can not find io counters")
-	}
-
-	status.TcpCount, err = sys.GetTCPCount()
-	if err != nil {
-		logger.Warning("get tcp connections failed:", err)
-	}
-
-	status.UdpCount, err = sys.GetUDPCount()
-	if err != nil {
-		logger.Warning("get udp connections failed:", err)
 	}
 
 	if s.xrayService.IsXrayRunning() {
